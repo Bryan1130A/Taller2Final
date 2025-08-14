@@ -109,7 +109,7 @@ export const Pantalla1Screens = ({ navigation }: Props) => {
   );
 };
 
-const localStyles = StyleSheet.create({
+const localStyles = StyleSheet.create({ //hola
   container: {
     flex: 1,
     padding: 20,
