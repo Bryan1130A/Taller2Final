@@ -88,7 +88,7 @@ export const Pantalla2Screens = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Registro</Text>
+      <Text style={styles.title}>Registrooo</Text>
 
       <InputComponent placeholder="Usuario" property="usuario" changeForm={changeForm} keyboardType="default" />
       <InputComponent placeholder="Contraseña" property="clave" changeForm={changeForm} keyboardType="default" isPassword />
