@@ -1,44 +1,46 @@
-import React from "react";
-import { TextInput, View, StyleSheet, KeyboardTypeOptions } from "react-native";
+import React from 'react';
+import { StyleSheet, TextInput, View, TextInputProps } from 'react-native';
 
-type FormFields = "usuario" | "clave" | "email" | "telefono" | "direccion";
-
-type Props = {
+interface Props<T> extends TextInputProps {
   placeholder: string;
-  keyboardType: KeyboardTypeOptions;
-  changeForm: (property: FormFields, value: string) => void;
-  property: FormFields;
+  changeForm: (property: keyof T, value: string) => void;
+  property: keyof T;
   isPassword?: boolean;
-};
+}
 
-export const InputComponent = ({
+export const InputComponent = <T extends {}>({
   placeholder,
-  keyboardType,
   changeForm,
   property,
   isPassword = false,
-}: Props) => {
+  style,
+  ...rest
+}: Props<T>) => {
   return (
-    <View style={styles.inputContainer}>
+    <View style={styles.container}>
       <TextInput
         placeholder={placeholder}
-        keyboardType={keyboardType}
         secureTextEntry={isPassword}
-        style={styles.input}
         onChangeText={(value) => changeForm(property, value)}
+        style={[styles.input, style]}
+        {...rest}
       />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  inputContainer: {
-    marginVertical: 10,
+  container: {
+    width: '100%',
+    marginBottom: 12,
   },
   input: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
+    borderColor: '#007AFF',
+    fontSize: 16,
   },
 });

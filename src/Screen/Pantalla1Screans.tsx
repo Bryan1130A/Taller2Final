@@ -1,13 +1,4 @@
 import React, { useState, useContext } from "react";
-import {
-  Alert,
-  StatusBar,
-  Text,
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-} from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParams } from "../../navigator/StackNavigator";
 import { UserContext } from "../Context/UserContext";
@@ -15,6 +6,7 @@ import { styles } from "../../theme/app.theme";
 import { InputComponent } from "../Components/InputComponent";
 import { ButtonComponent } from "../Components/ButtonComponent";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { Alert, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type Props = StackScreenProps<RootStackParams, "Pantalla1">;
 
@@ -32,11 +24,17 @@ export const Pantalla1Screens = ({ navigation }: Props) => {
   const [hiddenPassword, setHiddenPassword] = useState(true);
   const { users } = useContext(UserContext);
 
-  const changeForm = (property: keyof LoginForm, value: string) => {
+  const changeForm = (property: string, value: string): void => {
     setFormLogin({ ...formLogin, [property]: value });
   };
 
-  const handleLogin = () => {
+  const verifyUser = (): LoginForm | undefined => {
+    return users.find(
+      (u) => u.usuario === formLogin.usuario && u.clave === formLogin.clave
+    );
+  };
+
+  const handleLogin = (): void => {
     const { usuario, clave } = formLogin;
 
     if (!usuario.trim() || !clave.trim()) {
@@ -44,16 +42,13 @@ export const Pantalla1Screens = ({ navigation }: Props) => {
       return;
     }
 
-    const user = users.find(
-      (u) => u.usuario === usuario && u.clave === clave
-    );
-
-    if (!user) {
+    if (!verifyUser()) {
       Alert.alert("Error", "Usuario o contraseña incorrectos");
       return;
     }
 
-    Alert.alert("Bienvenido", `Hola, ${user.usuario}`);
+    Alert.alert("Bienvenido", `Hola, ${usuario}`);
+    navigation.navigate("Pantalla3");
   };
 
   return (
@@ -79,7 +74,6 @@ export const Pantalla1Screens = ({ navigation }: Props) => {
           keyboardType="default"
           changeForm={changeForm}
           property="usuario"
-          style={localStyles.inputBorder}
         />
 
         <View style={localStyles.passwordContainer}>
@@ -89,7 +83,7 @@ export const Pantalla1Screens = ({ navigation }: Props) => {
             changeForm={changeForm}
             property="clave"
             isPassword={hiddenPassword}
-            style={[localStyles.inputBorder, { flex: 1 }]}
+            style={{ flex: 1 }}
           />
           <TouchableOpacity
             onPress={() => setHiddenPassword(!hiddenPassword)}
@@ -119,8 +113,8 @@ const localStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: "center", 
-    alignItems: "center", 
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#fff",
   },
   centerText: {
@@ -143,10 +137,5 @@ const localStyles = StyleSheet.create({
   },
   iconTouchable: {
     padding: 8,
-  },
-  inputBorder: {
-    borderWidth: 1,
-    borderColor: "#007AFF",
-    borderRadius: 8,
   },
 });
